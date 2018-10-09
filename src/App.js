@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import Todo from './Todo';
+
 class App extends Component {
 
     constructor() {
@@ -20,11 +22,22 @@ class App extends Component {
         }
     }
 
+    handleChange = (params) => {
+        const todos = this.state.todos.map(todo => {
+           if (todo.id === params.id) {
+               return {...todo, completed: !todo.completed};
+           }
+           return {...todo}
+        });
+
+        this.setState({todos});
+    };
+
     render() {
         const {todos} = this.state;
 
         const todoList = todos.map(todo => {
-           return <div key={todo.id}>{todo.title}</div>
+           return <Todo key={todo.id} {...todo} onChange={this.handleChange}/>
         });
 
         return (
