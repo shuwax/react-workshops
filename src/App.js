@@ -1,43 +1,35 @@
 import React, {Component} from 'react';
 
-import Title from './Title';
-import ButtonWithCounter from './ButtonWithCounter'
-
 class App extends Component {
+
     constructor() {
         super();
 
         this.state = {
-            counter: 0,
-            iterations: []
+            todos: []
         }
     }
 
-    handleClick = () => {
-        const {counter, iterations} = this.state;
-
-        this.setState({
-            counter: counter + 1,
-            iterations: [...iterations, {
-                id: counter + 1,
-                time: new Date()
-            }]
-        });
-    };
+    async componentDidMount() {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+            const todos = await response.json();
+            this.setState({todos})
+        } catch(err) {
+            console.warn(err);
+        }
+    }
 
     render() {
-        const {counter, iterations} = this.state;
+        const {todos} = this.state;
 
-        const list = iterations.map(item => {
-            return <div key={item.id}>{item.id} - {item.time.toString()}</div>;
+        const todoList = todos.map(todo => {
+           return <div key={todo.id}>{todo.title}</div>
         });
-
 
         return (
             <div className="App">
-                <Title type="TEST2" content="Welcome message"/>
-                <ButtonWithCounter onClick={this.handleClick} counter={counter}/>
-                {list}
+                {todoList}
             </div>
         );
     }
