@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import Todo from '../Todo';
 
-import {fetchTodos} from './todoService';
-import {addTodo} from './store/todos';
-
-import Todo from './Todo';
 class App extends Component {
 
     async componentDidMount() {
@@ -27,17 +23,4 @@ class App extends Component {
     }
 }
 
-//Połącznenie
-const mapStateToProps = (state) => {
-    return {
-        todos: state.todos.list,
-        fetching: state.todos.fetching
-    }
-};
-
-const mapDispatchToProps = {
-    fetchTodos,
-    addTodo
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
