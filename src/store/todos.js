@@ -24,7 +24,7 @@ export default handleActions({
     },
 
     [ADD_TODOS]: (state, action) => {
-        return {...state, list: action.payload};
+        return {...state, list: [...state.list, ...action.payload], fetching: false};
     },
 
     [FETCHING_TODOS]: (state, action) => {

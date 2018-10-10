@@ -1,28 +1,16 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {addTodo, addTodos, fetchingTodos} from './store/todos';
+import {fetchTodos} from './todoService';
+import {addTodo} from './store/todos';
+
 import Todo from './Todo';
 class App extends Component {
 
     async componentDidMount() {
-        const {addTodos, fetchingTodos} = this.props;
-        try {
-            fetchingTodos(true);
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-            const todos = await response.json();
-            addTodos(todos);
-            fetchingTodos(false);
-        } catch(err) {
-            console.warn(err);
-            fetchingTodos(false);
-        }
+        this.props.addTodo({id: 0, title: 'My To Do'});
+        this.props.fetchTodos();
     }
-
-    handleClick = () => {
-        const todo = {id: 2, title: 'My new todo', completed: false};
-        this.props.addTodo(todo);
-    };
 
     render() {
         const {todos, fetching} = this.props;
@@ -33,13 +21,13 @@ class App extends Component {
 
         return (
             <div className="App">
-                <button onClick={this.handleClick}>Add new ToDo</button>
                 {fetching ? <div>Loading...</div> : todoList}
             </div>
         );
     }
 }
 
+//Połącznenie
 const mapStateToProps = (state) => {
     return {
         todos: state.todos.list,
@@ -48,9 +36,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    addTodo,
-    addTodos,
-    fetchingTodos
+    fetchTodos,
+    addTodo
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
