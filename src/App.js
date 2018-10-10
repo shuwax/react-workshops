@@ -1,51 +1,56 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
+import {addTodo, addTodos, fetchingTodos} from './store/todos';
 import Todo from './Todo';
-
 class App extends Component {
 
-    constructor() {
-        super();
-
-        this.state = {
-            todos: []
-        }
-    }
-
     async componentDidMount() {
+        const {addTodos, fetchingTodos} = this.props;
         try {
+            fetchingTodos(true);
             const response = await fetch('https://jsonplaceholder.typicode.com/todos');
             const todos = await response.json();
-            this.setState({todos})
+            addTodos(todos);
+            fetchingTodos(false);
         } catch(err) {
             console.warn(err);
+            fetchingTodos(false);
         }
     }
 
-    handleChange = (params) => {
-        const todos = this.state.todos.map(todo => {
-           if (todo.id === params.id) {
-               return {...todo, completed: !todo.completed};
-           }
-           return {...todo}
-        });
-
-        this.setState({todos});
+    handleClick = () => {
+        const todo = {id: 2, title: 'My new todo', completed: false};
+        this.props.addTodo(todo);
     };
 
     render() {
-        const {todos} = this.state;
+        const {todos, fetching} = this.props;
 
         const todoList = todos.map(todo => {
-           return <Todo key={todo.id} {...todo} onChange={this.handleChange}/>
+           return <Todo key={todo.id} {...todo} onChange={() => {}}/>
         });
 
         return (
             <div className="App">
-                {todoList}
+                <button onClick={this.handleClick}>Add new ToDo</button>
+                {fetching ? <div>Loading...</div> : todoList}
             </div>
         );
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        todos: state.todos.list,
+        fetching: state.todos.fetching
+    }
+};
+
+const mapDispatchToProps = {
+    addTodo,
+    addTodos,
+    fetchingTodos
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
