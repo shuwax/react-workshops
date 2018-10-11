@@ -6,7 +6,7 @@ const ADD_TODOS = 'ADD_TODOS';
 const FETCHING_TODOS = 'FETCHING_TODOS';
 
 const defaultState = {
-    list: [{id: 1, title: 'test', completed: false}],
+    list: [{id: 1000, title: 'test', completed: false, userId: 1000}],
     fetching: false
 };
 
